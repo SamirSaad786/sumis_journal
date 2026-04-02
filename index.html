@@ -2427,8 +2427,8 @@ function localGetAll() {
 //   create policy "insert_open" on scores for insert with check (true);
 //   create policy "select_open" on scores for select using (true);
 // ═══════════════════════════════════════════════════════════
-const SUPABASE_URL = '';
-const SUPABASE_KEY = '';
+const SUPABASE_URL = 'https://cpjsvvtsoqgrhalmmema.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_DnIcmyTbO3GICBu4FYHOGQ_WW8w7p-8';
   
 async function supabaseInsert(playerName, stageIdx, stageName, score) {
   if (!SUPABASE_URL||!SUPABASE_KEY) return {ok:false,reason:'not_configured'};
