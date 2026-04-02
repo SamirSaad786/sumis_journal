@@ -733,12 +733,12 @@ opacity:0; pointer-events:none; transition:opacity 0.25s ease, background 0.15s,
     </div>
     <div id="lb-stage-select" class="lb-stage-select">
       <button class="lb-stage-btn active" onclick="selectLbStage(0)" data-stage="0">All</button>
-      <button class="lb-stage-btn" onclick="selectLbStage(1)" data-stage="1">W1</button>
-      <button class="lb-stage-btn" onclick="selectLbStage(2)" data-stage="2">W2</button>
-      <button class="lb-stage-btn" onclick="selectLbStage(3)" data-stage="3">W3</button>
-      <button class="lb-stage-btn" onclick="selectLbStage(4)" data-stage="4">W4</button>
-      <button class="lb-stage-btn" onclick="selectLbStage(5)" data-stage="5">W5</button>
-      <button class="lb-stage-btn" onclick="selectLbStage(6)" data-stage="6">W6</button>
+      <button class="lb-stage-btn" onclick="selectLbStage(1)" data-stage="1">Ward1</button>
+      <button class="lb-stage-btn" onclick="selectLbStage(2)" data-stage="2">Ward2</button>
+      <button class="lb-stage-btn" onclick="selectLbStage(3)" data-stage="3">Ward3</button>
+      <button class="lb-stage-btn" onclick="selectLbStage(4)" data-stage="4">Ward4</button>
+      <button class="lb-stage-btn" onclick="selectLbStage(5)" data-stage="5">Ward5</button>
+      <button class="lb-stage-btn" onclick="selectLbStage(6)" data-stage="6">Ward6</button>
     </div>
     <div id="lb-content" class="lb-content"><div class="lb-loading">Loading records…</div></div>
     <button class="lore-btn" style="margin-top:32px" onclick="showScreen('title-screen')">← Back</button>
@@ -2392,13 +2392,16 @@ function calcStageScore() {
 // ═══════════════════════════════════════════════════════════
 const LOCAL_KEY = 'sumis_journal_v1';
 
-function localSave(stageIdx, playerName, score) {
+function localSave(stageIdx, playerName, score, forceName=false) {
   let data = {};
   try { data = JSON.parse(localStorage.getItem(LOCAL_KEY)||'{}'); } catch(e){}
   const key = 's'+stageIdx;
   const isNewPB = !data[key] || score > data[key].score;
   if (isNewPB) {
     data[key] = { playerName, score, date:new Date().toISOString().slice(0,10), stageIdx };
+    try { localStorage.setItem(LOCAL_KEY, JSON.stringify(data)); } catch(e){}
+  } else if (forceName && data[key]) {
+    data[key].playerName = playerName;
     try { localStorage.setItem(LOCAL_KEY, JSON.stringify(data)); } catch(e){}
   }
   return isNewPB;
@@ -2529,7 +2532,7 @@ async function submitScore(stageIdx, stageName, score) {
   const name = nameInput ? nameInput.value.trim() : '';
   if (!name) { if(statusEl) statusEl.textContent='Enter a name first.'; return; }
 
-  localSave(stageIdx, name, score);
+  localSave(stageIdx, name, score, true);
 
   if (!SUPABASE_URL||!SUPABASE_KEY) {
     if(statusEl) statusEl.textContent='Saved locally. Configure Supabase to go global.';
